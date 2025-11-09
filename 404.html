@@ -5,39 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Redirecting...</title>
     <script>
+      // GitHub Pages 404 routing - redirect immediately
       (function () {
         var path = window.location.pathname;
         var cleanPath = path.replace(/\.html$/, "").replace(/\/$/, "") || "/";
 
-        // Route mapping
+        // Route mapping for known routes
         var routes = {
-          "/": "/index.html",
-          "/thankyou": "/thankyou.html",
-          "/index": "/index.html",
+          "/": "index.html",
+          "/thankyou": "thankyou.html",
+          "/index": "index.html",
         };
+
+        // Get repository base path (for custom domain or subdirectory)
+        var basePath = "";
+        var pathParts = cleanPath.split("/").filter(Boolean);
 
         // Check if we have a direct route match
         if (routes[cleanPath]) {
-          window.location.replace(routes[cleanPath]);
+          window.location.href = basePath + routes[cleanPath];
           return;
         }
 
-        // Try to load the .html version
-        var htmlPath = cleanPath + ".html";
-        var xhr = new XMLHttpRequest();
-        xhr.open("HEAD", htmlPath, true);
-        xhr.onload = function () {
-          if (xhr.status === 200) {
-            window.location.replace(htmlPath);
-          } else {
-            // Fallback to home
-            window.location.replace("/index.html");
-          }
-        };
-        xhr.onerror = function () {
-          window.location.replace("/index.html");
-        };
-        xhr.send();
+        // Try common paths
+        if (pathParts.length > 0) {
+          var lastPart = pathParts[pathParts.length - 1];
+          var possibleFile = lastPart + ".html";
+
+          // Try to load the file directly
+          var testPath = basePath + possibleFile;
+          var xhr = new XMLHttpRequest();
+          xhr.open("HEAD", testPath, true);
+          xhr.onload = function () {
+            if (xhr.status === 200) {
+              window.location.href = testPath;
+            } else {
+              // Fallback to home
+              window.location.href = basePath + "index.html";
+            }
+          };
+          xhr.onerror = function () {
+            window.location.href = basePath + "index.html";
+          };
+          xhr.send();
+        } else {
+          // Root path, go to index
+          window.location.href = basePath + "index.html";
+        }
       })();
     </script>
     <noscript>
