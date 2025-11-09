@@ -1,0 +1,15 @@
+# GitHub Pages Jekyll Configuration
+# This file enables clean URLs (without .html extension)
+
+permalink: pretty
+include: [".htaccess"]
+
+# Enable Jekyll processing
+plugins:
+  - jekyll-redirect-from
+
+# Exclude files from processing
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock

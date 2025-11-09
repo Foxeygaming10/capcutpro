@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redirecting...</title>
+    <script>
+      (function () {
+        var path = window.location.pathname;
+        var cleanPath = path.replace(/\.html$/, "").replace(/\/$/, "") || "/";
+
+        // Route mapping
+        var routes = {
+          "/": "/index.html",
+          "/thankyou": "/thankyou.html",
+          "/index": "/index.html",
+        };
+
+        // Check if we have a direct route match
+        if (routes[cleanPath]) {
+          window.location.replace(routes[cleanPath]);
+          return;
+        }
+
+        // Try to load the .html version
+        var htmlPath = cleanPath + ".html";
+        var xhr = new XMLHttpRequest();
+        xhr.open("HEAD", htmlPath, true);
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            window.location.replace(htmlPath);
+          } else {
+            // Fallback to home
+            window.location.replace("/index.html");
+          }
+        };
+        xhr.onerror = function () {
+          window.location.replace("/index.html");
+        };
+        xhr.send();
+      })();
+    </script>
+    <noscript>
+      <meta http-equiv="refresh" content="0; url=/index.html" />
+    </noscript>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+      .redirect-message {
+        text-align: center;
+        padding: 20px;
+      }
+      a {
+        color: white;
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="redirect-message">
+      <p>Redirecting...</p>
+      <p>If you are not redirected, <a href="/index.html">click here</a>.</p>
+    </div>
+  </body>
+</html>
